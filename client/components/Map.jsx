@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import ReactMapGL, {Marker, GeolocateControl, FlyToInterpolator} from 'react-map-gl';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 import { bindActionCreators } from 'redux';
@@ -8,6 +8,7 @@ import CustomMapController from './CustomMapController';
 import logo from '../../assets/danger-pin.png'
 import * as mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import Geocoder from "react-map-gl-geocoder";
 
 console.log('in Map.jsx')
 //destructuring the state to get lng, lat, zoom from redux state and put them into prop obj 
@@ -26,6 +27,12 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 const mapController = new CustomMapController();
 
 const Map = (props) => {
+
+  const [viewport, setViewport] = useState({
+    latitude: 40.7128,
+    longitude: -74.0060,
+    zoom: 13
+  });
   useEffect(() => {
     props.getCoordinates();
   }, [])
@@ -34,10 +41,33 @@ const Map = (props) => {
     props.getCoordinates();
   }, [props.allIncidents])
 
+  const mapRef = useRef();
+  const handleViewportChange = useCallback(
+    (newViewport) => setViewport(newViewport),
+    []
+  );
+
+  const geolocateControlStyle = {
+    right: 10,
+    top: 10
+  };
+
+  const handleGeocoderViewportChange = useCallback(
+    (newViewport) => {
+      const geocoderDefaultOverrides = { transitionDuration: 4000 };
+
+      return handleViewportChange({
+        ...newViewport,
+        ...geocoderDefaultOverrides
+      });
+    },
+    [handleViewportChange]
+  );
+
   return (
-    
     <ReactMapGL
-      {...props.viewport} 
+      ref={mapRef}
+      {...viewport} 
       height='100%'
       width='100%' 
       mapboxApiAccessToken = {process.env.REACT_APP_MAPBOX_ACCESS_TOKEN} 
@@ -52,20 +82,46 @@ const Map = (props) => {
       mapStyle='mapbox://styles/ruzeb/ckxzlf0mk9gn714qei4cq6lm1' 
       doubleClickZoom={false}
       attributionControl={false}
-      onViewportChange={(newViewport) => {props.setMap(newViewport)}
-    }>
-        {props.pinLocations.map((el, key) => {
-          return (
-            
-          <Marker key={key + 1} latitude={el.latitude} longitude={el.longitude} address={el.address} id={el.id}>
-          {/* button onclick post pops up */}
-            <button className='map-pin' onClick={(e) => {props.changeActivePost(el.id);props.getCommentsByIncident(el.id);}} style={{backgroundColor: 'transparent', border: 'none'}}>
-              <img src={logo} alt='pin' style={{backgroundColor: 'transparent', height: '50px', width: '50px'}}/>
-            </button>
-          </Marker>
-          )
-        }
-        )}
+      onViewportChange={handleViewportChange}
+    >
+    <GeolocateControl
+      style={geolocateControlStyle}
+      positionOptions={{enableHighAccuracy: true}}
+      trackUserLocation={true}
+      showUserHeading={true}
+      auto
+    />
+    <Geocoder
+      mapRef={mapRef}
+      onViewportChange={handleGeocoderViewportChange}
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      position="top-left"
+    />
+    {props.pinLocations.map((el, key) => {
+      return (
+        
+      <Marker key={key + 1} latitude={el.latitude} longitude={el.longitude} address={el.address} id={el.id}>
+      {/* button onclick post pops up */}
+        <button className='map-pin' 
+          onClick={(e) => {
+            props.changeActivePost(el.id);
+            props.getCommentsByIncident(el.id);
+            setViewport({
+              latitude: el.latitude,
+              longitude: el.longitude,
+              zoom: 15,
+              transitionDuration: 4000,
+              transitionInterpolator: new FlyToInterpolator(),
+            }
+          )}
+        } 
+          style={{backgroundColor: 'transparent', border: 'none'}}>
+          <img src={logo} alt='pin' style={{backgroundColor: 'transparent', height: '50px', width: '50px'}}/>
+        </button>
+      </Marker>
+      )
+    }
+    )}
     </ReactMapGL>
   );
 }
