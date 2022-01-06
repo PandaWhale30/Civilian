@@ -73,13 +73,43 @@ controller.getIncidents = async (req, res, next) => {
   }
 };
 
+controller.getCommentsByIncident = async (req, res, next) => {
+  
+  try {
+
+    console.log(req.params);
+    // destructure incident id from parameters of incoming request
+    const { incident_id } = req.params;
+
+    // SQL command string to get the comments on a given incident
+    const queryString = `SELECT comment_id, comment, created_on, name, photo from COMMENTS JOIN public.user ON public.user.user_id = comments.user_id WHERE incident_id = $1`;
+
+    // db query function to get info from our database
+    const result = await db.query(queryString, [incident_id]);
+
+    // db.query will return a giant nested object. We just need the data in the rows key
+    const data = result.rows;
+
+    // store data in res.locals.all to pass to api router
+    res.locals.comments = data;
+    return next();
+  } catch (error) {
+    return next({
+      log: `getCommentsbyIncident controller ERROR ${error}`,
+      message: {
+        err: 'Error occurred in controller.getCommentsbyIncident. Check the server logs.',
+      },
+    });
+  }
+};
+
 // get name, and photo of a user. Requires name and password
 controller.getUserName = async (req, res, next) => {
   console.log('USERNAME req body', req.body);
   try {
     const { name, password } = req.body;
     // SQL command string
-    const queryString = `SELECT name, password, photo from public.user WHERE name = $1`;
+    const queryString = `SELECT name, password, photo, user_id from public.user WHERE name = $1`;
 
     // db query function to get info from our database
     const result = await db.query(queryString, [name]);
@@ -92,22 +122,25 @@ controller.getUserName = async (req, res, next) => {
     await bcrypt.compare(password, hash, (err, ok) => {
       if (ok) {
         console.log('bcrypt comparison check OK');
+        res.locals.user = {
+          name: data[0].name,
+          photo: data[0].photo,
+          user_id: data[0].user_id
+        };
         return next();
       } else {
-        res.send(err);
+        console.log('err')
+        return next({
+          log: `getUserName controller ${err}`,
+          message: {
+            err: 'Error occurred in controller.getIncidentByUserName. Check the server logs.',
+          },
+        });
       }
     });
-
-    // store data in res.locals.all to pass to api router
-    res.locals.user = {
-      name: data[0].name,
-      photo: data[0].photo,
-    };
-
-    return next();
   } catch (error) {
     return next({
-      log: `getIncidentByUserName controller ERROR`,
+      log: `getUserName controller ERROR`,
       message: {
         err: 'Error occurred in controller.getIncidentByUserName. Check the server logs.',
       },
@@ -181,6 +214,48 @@ controller.postEvent = async (req, res, next) => {
       status: 500,
       message: {
         err: 'Error occurred in controller.postEvent. Check the server logs.',
+      },
+    });
+  }
+};
+
+controller.postCommentOnIncident = async (req, res, next) => {
+  console.log(req.body);
+  try{
+    const time = new Date(Date.now()).toLocaleString();
+
+    // object destructuring the req.body to pass in to params
+    const { incident_id, user_id, comment } = req.body;
+    
+    // params will be passed to db query, to insert the data object to the sql db
+    const params = [
+      incident_id,
+      user_id,
+      comment,
+      time
+    ];
+
+    // SQL command to insert values into the following table(public.incident) columns
+    const text = `WITH inserted_comment AS(
+      INSERT INTO public.comments (incident_id, user_id, comment, created_on)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *)
+      SELECT * FROM inserted_comment
+      JOIN public.user ON public.user.user_id = inserted_comment.user_id WHERE incident_id = $1
+      `;
+
+    // our async function passing in the SQL command string 'text' and our params data
+    const result = await db.query(text, params);
+
+    // store the evaluated query result into res.locals.allEvents to pass to api router
+    res.locals.comment = result.rows[0];
+    return next();
+  } catch (error) {
+    return next({
+      log: `controller.postCommentOnIncident ERROR found ${error}`,
+      status: 500,
+      message: {
+        err: 'Error occurred in controller.postCommentOnIncident. Check the server logs.',
       },
     });
   }

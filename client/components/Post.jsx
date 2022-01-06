@@ -8,12 +8,13 @@ console.log('in Post.jsx');
 // we are destructuring the state to get the title, loc, details, time from
 // the redux state and placing them into the props object
 // The Post component "subscribes to" the changes seen in the state
-const mapStateToProps = ({posts: { title, street_name, details, time, image_url }}) => ({
+const mapStateToProps = ({posts: { title, street_name, details, time, image_url, incident_id }}) => ({
   title,
   street_name,
   details,
   time,
-  image_url
+  image_url,
+  incident_id
 })
 
 // allows us to use the actions in actions.js without having to wrap them so that we can invoke those functions
@@ -24,7 +25,7 @@ const Post = (props) => {
   console.log(props);
   return (
     <>
-    {props.title !== null && (<div className='post' onClick={() => props.setExpandedPost(true)}>
+    {props.title !== null && (<div className='post' onClick={() => {props.setExpandedPost(true);}}>
       <div className='post-header'>
         <p className='post-time'>Last updated at {props.time} </p>
         <p className='post-title'> {props.title} </p>
