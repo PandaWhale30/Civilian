@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
 import { bindActionCreators } from 'redux';
 import CustomMapController from './CustomMapController';
-import logo from '../../assets/danger-pin.png'
+import logo1 from '../../assets/gray_pin.png';
+import logo2 from '../../assets/yellow_pin.png';
+import logo3 from '../../assets/danger-pin.png';
 import * as mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import Geocoder from "react-map-gl-geocoder";
@@ -101,7 +103,7 @@ const Map = (props) => {
     {props.pinLocations.map((el, key) => {
       return (
         
-      <Marker key={key + 1} latitude={el.latitude} longitude={el.longitude} address={el.address} id={el.id}>
+      <Marker key={key + 1} latitude={el.latitude} longitude={el.longitude} address={el.address} id={el.id} severity={el.severity}>
       {/* button onclick post pops up */}
         <button className='map-pin' 
           onClick={(e) => {
@@ -117,7 +119,7 @@ const Map = (props) => {
           )}
         } 
           style={{backgroundColor: 'transparent', border: 'none'}}>
-          <img src={logo} alt='pin' style={{backgroundColor: 'transparent', height: '50px', width: '50px'}}/>
+          <img src={el.severity === "1" ? logo1 : el.severity === "2" ? logo2 : logo3} alt='pin' style={{backgroundColor: 'transparent', height: '50px', width: '50px'}}/>
         </button>
       </Marker>
       )

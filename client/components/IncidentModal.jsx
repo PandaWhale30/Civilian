@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 
 const mapStateToProps = ({map: {allIncidents}}) => ({
   allIncidents
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   // create functions that will dispatch action creators
@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => ({
         e.target.form[1].value, 
         e.target.form[2].value, 
         e.target.form[3].value,
-        // e.target.form[4].value
+        e.target.form[4].value
       )
     );
   },
@@ -61,6 +61,14 @@ const IncidentModal = (props) => {
           <label htmlFor="address">ADDRESS</label>
           <input className="form-input" type="text" name="address" placeholder="Enter the location"/>
         </div> */}
+        <div className="input-div">
+          <label htmlFor="severity">DANGER</label>
+          <select className="form-input" type="text" name="title" placeholder="Severity of Incident">
+            <option value="1">Ehhhhh, keep it pushing</option>
+            <option value="2">Might require a peek</option>
+            <option value="3">Run</option>
+          </select>
+        </div>
         <div className="input-div">
           <label htmlFor="details">DETAILS</label>
           <input className="form-input" type="text" name="details" placeholder="Enter any details"/>
