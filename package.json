@@ -5,6 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"nodemon ./server/server.js\"",
+    "test-server": "export NODE_ENV=test && concurrently \"cross-env NODE_ENV=test webpack-dev-server --open --hot --progress --color \" \"nodemon ./server/server.js\"",
     "test": "jest --verbose"
   },
   "repository": {
@@ -17,9 +18,17 @@
     "url": "https://github.com/Wunderpus-Photogenicus-30/Civilian/issues"
   },
   "homepage": "https://github.com/Wunderpus-Photogenicus-30/Civilian#readme",
+  "jest": {
+    "verbose": true,
+    "setupFilesAfterEnv": [
+      "./testSetup.js",
+      "jest-extended/all"
+    ]
+  },
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^4.7.4",
     "@mapbox/mapbox-sdk": "^0.13.2",
+    "@types/jest": "^27.4.0",
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -73,6 +82,7 @@
     "jest-extended": "^1.2.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
+    "supertest": "^6.1.6",
     "react-test-renderer": "^17.0.2",
     "style-loader": "^3.3.1",
     "supertest": "^6.1.6",

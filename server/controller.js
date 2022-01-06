@@ -6,10 +6,12 @@ const controller = {};
 // hash a user inputted password
 controller.hash = async (req, res, next) => {
   try {
+    console.log("req.body", req.body)
     const { name, password } = req.body;
     const hashedPw = await bcrypt.hash(password, 10, (err, hash) => {
       const userSignup = { name: name, hashedPw: hash };
       res.locals.signupInfo = userSignup;
+      console.log("res.locals.signupInfo", res.locals.signupInfo);
       return next();
     });
   } catch (error) {
@@ -30,6 +32,7 @@ controller.getUsers = async (req, res, next) => {
     const queryString = `SELECT * from public.user`;
 
     // db query function to get info from our database
+    console.log("My get users database", db.PG_URI);
     const result = await db.query(queryString);
 
     // db.query will return a giant nested object. We just need the data in the rows key
@@ -287,10 +290,12 @@ controller.newUser = async (req, res, next) => {
         `;
 
     // our async function passing in the SQL command string 'text' and our params data
+    console.log("INSERT NEWUSERS FAVORITE", db.PG_URI);
     const result = await db.query(text, params);
 
     // store the evaluated query result into res.locals.newUser to pass to api router
     res.locals.newUser = result.rows[0];
+    console.log("From new user middleware", res.locals)
     return next();
   } catch (error) {
     return next({
@@ -403,5 +408,23 @@ controller.updateIncidentDetails = async (req, res, next) => {
     });
   }
 };
+
+// TODO
+// controller.deleteAllData = async (req, res, next) => {
+//   console.log('req.body', req.body);
+//   try {
+//     //await delete the file in some way
+//     return next();
+//   } catch (error) {
+//     return next({ // TODO: reduce code duplication in next();
+//       log: `controller.deleteAllData ERROR found`,
+//       status: 500,
+//       message: {
+//         err: 'Error occurred in controller.deleteAllData. Check the server logs.',
+//       },
+//     });
+//   }
+// };
+
 
 module.exports = controller;
