@@ -45,6 +45,7 @@ router.post(
   '/signup',
   controller.hash,
   controller.newUser,
+  // (res, next) => {console.log("This is a console.log middleware", res); next()},
   (req, res) => res.status(201).json(res.locals.newUser),
 );
 
@@ -79,5 +80,12 @@ router.put(
   controller.updateIncidentDetails,
   (req, res) => res.status(200).json('details was updated!'),
 );
+
+// TODO
+//router.delete(
+//   '/deletion/deletemethod',
+//   controller.deleteAllData,
+//   (req, res) => res.status(202).json('BALEETED!'),
+// );
 
 module.exports = router;

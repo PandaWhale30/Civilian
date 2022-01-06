@@ -1,7 +1,14 @@
 const { Pool } = require('pg');
 
-const PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.elephantsql.com/qvlqajje';
+let PG_URI;
 // old url 'postgres://vgrmebyf:S_1pEz4mslMJN_ie4x4YM8fnQOm2YdKv@kashin.db.elephantsql.com/vgrmebyf';
+//console.log("MYNODEENV, process.env);
+if (process.env.NODE_ENV === 'test') {
+  PG_URI = 'postgres://gthdaqok:NvPjKt9dKLte0kNYZiTu7flvY8RRXTAd@kashin.db.elephantsql.com/gthdaqok';
+} else {
+  PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.elephantsql.com/qvlqajje';
+};
+
 
   const pool = new Pool({
     connectionString: PG_URI,
@@ -10,7 +17,6 @@ const PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.e
 
 
   /* 
-  the database has multiple tables:
 
   table public.incident:
     {
@@ -40,5 +46,6 @@ const PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.e
     query: (text, params, callback) => {
       console.log('executed query', text);
       return pool.query(text, params, callback);
-    }
+    },
+    PG_URI: PG_URI
   };
