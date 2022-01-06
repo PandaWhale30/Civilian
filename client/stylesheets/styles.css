@@ -133,17 +133,11 @@ body{
 }
 
 #map {
-  width: 100%;
+  width: 80%;
   position: relative;
   min-height: 100px;
   min-width: 300px;
   flex: 1 1 50vh;
-  /* border: 1px red solid; */
-}
-
-#map-img{
-  width: 100%;
-  height: 100%;;
 }
 
 .map-pin{
