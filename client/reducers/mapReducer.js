@@ -6,13 +6,13 @@ import { defaultMaxListeners } from 'events';
 const allIncidents = [];
 axios.get(`api/incidents`)
 .then(({data}) => {
-    console.log('data', data);
+    //console.log('data', data);
     for(let incident of data){
         allIncidents.push(incident)
     }
 })
 .catch(console.error);
-console.log('allIncidents', allIncidents)
+//console.log('allIncidents', allIncidents)
 
 
 const initialState = {
@@ -39,17 +39,15 @@ const mapReducer = (state = initialState, action) => {
       }
     };
     case types.GET_COORDINATES: 
-      console.log('in get coords mapreducer')
+      //console.log('in get coords mapreducer')
       const newPins = [...action.payload];
       return {
         ...state,
         pinLocations: newPins
       }
     case types.POST_EVENT:
-      const newIncidents = [...state.allIncidents];//.push(action.payload);
+      const newIncidents = [...state.allIncidents];
       newIncidents.push(action.payload);
-      // const newPins = [...state.pinLocations];
-      // newPins.push(action.payload)
       return{
         ...state,
         allIncidents : [...newIncidents]

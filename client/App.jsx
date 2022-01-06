@@ -23,7 +23,7 @@ const mapStateToProps = ({posts: { expandedPost }, user: {isLoggedIn, username, 
 
 const App = (props) => {
   console.log('in app.jsx');
-  console.log(props);
+  // console.log(props);
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [showIncidentModal, setShowIncidentModal] = useState(false);

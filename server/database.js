@@ -7,8 +7,6 @@ const PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.e
     connectionString: PG_URI,
   });
 
-
-
   /* 
   the database has multiple tables:
 
@@ -35,6 +33,16 @@ const PG_URI = 'postgres://qvlqajje:HrMf5gGqZv9ROy972cYrtxDsbbQCAqN8@kashin.db.e
     },
 
   */  
+  /* 
+    table public.comments:
+    {
+        "comment_id": 1 <-- PRIMARY KEY
+        "incident_id": 1 <-- FOREIGN KEY for public.incident.incident_id
+        "user_id": 1, <-- FOREIGN KEY for public.user.user_id
+        "comment": "bing bong",
+        "created on": "1/2/2022, 10:11:08 PM"
+    },
+  */ 
 
   module.exports = {
     query: (text, params, callback) => {

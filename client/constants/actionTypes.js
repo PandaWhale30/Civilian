@@ -6,3 +6,6 @@ export const SET_MAP = 'SET_MAP';
 export const POST_EVENT = 'POST_EVENT';
 export const GET_COORDINATES = 'GET_COORDINATES'
 export const SAVE_USER_COORDS = 'SAVE_USER_COORDS'
+export const GET_COMMENTS = 'GET_COMMENTS'
+export const FILL_COMMENT = 'FILL_COMMENT'
+export const POST_COMMENT = 'POST_COMMENT'
