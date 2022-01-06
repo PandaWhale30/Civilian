@@ -9,6 +9,7 @@ const initialState = {
   // video_url: 'https://www.youtube.com/embed/sqAwvpw_FKc',
   // expandedPost: false,
   title: null,
+  severity: null,
   street_name: null,
   details: null,
   time: null,

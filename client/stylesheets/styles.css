@@ -439,6 +439,10 @@ label {
   width: 100%;
 }
 
+#button-container> a{
+  width: 100%;
+}
+
 #signup-button{
   background-color: #3dd48e;
 }
@@ -467,6 +471,17 @@ label {
   cursor: pointer;
   border: none;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+#login-button-google{
+    font-size: 0.85rem;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .exit-modal{

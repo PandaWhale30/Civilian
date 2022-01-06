@@ -47,8 +47,8 @@ const FormModal = (props) => {
         <div id='button-container'>
           <button id="signup-button" className="form-button" onClick={(e) => {props.signup(e);props.onCloseButtonClick();}}>Sign Up</button>
           <button id="login-button" className="form-button" onClick={(e) => {props.login(e);props.onCloseButtonClick();}}>Login</button>
-          <a href="/api/auth/google"  id="login-button-google" className="form-button" >HREF Login with Google</a>
-          <button id="login-button-google" className="form-button" onClick={(e) => {props.loginGoogleOauth(e);props.onCloseButtonClick();}}>Login with Google</button>
+          <a href="/api/auth/google"  id="login-button-google" className="form-button" onClick={() => console.log('can we make something a link & an onclick')} className="form-button" >HREF Login with Google</a>
+          {/* <button id="login-button-google" className="form-button" onClick={(e) => {props.loginGoogleOauth(e);props.onCloseButtonClick();}}>Login with Google</button> */}
 
         </div>
       </form>

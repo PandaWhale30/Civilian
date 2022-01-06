@@ -35,6 +35,7 @@ const userReducer = (state=initialState, action) => {
         ...state,
         userComment : action.payload
       };
+
   
 
     default:

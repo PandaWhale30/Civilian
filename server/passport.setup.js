@@ -34,8 +34,8 @@ passportObj.passportSetup = () =>  {
     passport.use(new GoogleStrategy({
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://localhost:8080/auth/google/callback'
-    }, () => {console.log('exited the initial passport.use')},
+        callbackURL: 'http://localhost:8080/api/auth/google/callback'
+    }, 
     
     //callback functions are invoked after second invocation of authenticate after being redirected to auth/google/callback
     async (issuer, profile, done) => {
@@ -49,7 +49,7 @@ passportObj.passportSetup = () =>  {
         let sqlID = 0;
 
         //find the userID in sql, if it exists, then store sqlID. It must wait for this query to complete
-        await query(`SELECT * FROM user WHERE oauthkey='${String(googleID)}',`)
+        await query(`SELECT * FROM public.user WHERE oauthkey='${String(googleID)}'`)
         .then((queryData) => {
             //crap out if too many users
             if(queryData.rows.length > 1) {
@@ -72,12 +72,12 @@ passportObj.passportSetup = () =>  {
             else{
                 console.log(`Didn't find ${name}. Inserting into users table`);
                 //if it doesn't exist, create new sql user with the name and google ID.
-                query(`INSERT INTO user (name, oauthkey) VALUES ('${name}', '${String(googleID)}');`)
+                query(`INSERT INTO public.user (name, oauthkey) VALUES ('${name}', '${String(googleID)}');`)
                 .then(query => {
                     console.log(`Created user ${name}`);
                 })
                 .then(async () => {
-                    await query(`SELECT * FROM user WHERE oauthkey='${String(googleID)}';`)
+                    await query(`SELECT * FROM public.user WHERE oauthkey='${String(googleID)}';`)
                     .then(query => {
                         sqlID = query.rows[0]._id;
                         const user = {

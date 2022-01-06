@@ -7,7 +7,7 @@ const cors = require('cors');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oidc')
 
-//this where is the problem is 
+
 const passportObj = require('./passport.setup.js');
 
 passportObj.passportSetup();
@@ -101,24 +101,28 @@ router.get(
     methods: "GET, POST, PATCH, DELETE, PUT",
     allowedHeaders: "Content-Type, Authorization",
 
-}), passport.authenticate('google', { scope: ['openid', 'profile', 'email'] }),
+}),
+ passport.authenticate('google', { scope: ['openid', 'profile', 'email'] }),
   (req,res) => {
     console.log('passed passport.authenticate')
     res.status(200).send('recieved response from google')}
 );
 
 router.get(
-  '/auth/google/callback', () => {console.log("entered callback route")}, passport.authenticate('google'), 
+  '/auth/google/callback', passport.authenticate('google'),
   (req, res) => {
-    res.status(200).send('logged in')
+    // res.status(200).send('callback redirected')
     //this is when to send to frontend 
     //store the user data into the passport session data
     // to do// --> change this to fit what we're passing into redux in frontend 
+
+    //  
     req.session.userID = req.session.passport.user;
     console.log(req.session.passport.user);
+    // console.log('i guess werelogged in now')
 
     //redirect to home page? // --> how would we redirect while simultaneously maintining state 
-    res.status(200).redirect('/');
+    res.status(200).send('we are logged in, in theory... '); 
   }
 );
 

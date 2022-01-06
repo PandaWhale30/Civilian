@@ -54,9 +54,9 @@ const App = (props) => {
         </div>
       )}
       <div id='logo-wrapper'>
-        <span id='civ'>CIV</span>
+        <span id='civ'>DANGER</span>
         <img id='logo' src={logo} />
-        <span id='lian'>LIAN</span>
+        <span id='lian'>APP</span>
       </div>
       <div id='main-content'>
         <div id='map'>

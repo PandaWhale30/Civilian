@@ -12,7 +12,7 @@ axios.get(`api/incidents`)
     }
 })
 .catch(console.error);
-//console.log('allIncidents', allIncidents)
+console.log('allIncidents', allIncidents)
 
 
 const initialState = {
