@@ -25,12 +25,18 @@ router.post(
   (req, res) => res.status(200).json(res.locals.user),
 );
 
-// gets all incidents from public.incident by street name. Can target address, city,
-// state, or zipcode
+// gets all comments from the incident id passed in as a param on the url
 router.get(
-  '/incidents/location/:name',
-  controller.getIncidentByStreetName,
-  (req, res) => res.status(200).json(res.locals.incidentByStreetName),
+  '/incidents/comments/:incident_id',
+  controller.getCommentsByIncident,
+  (req, res) => res.status(200).json(res.locals.comments),
+);
+
+// post new comment on a given incident id into comments table
+router.post(
+  '/incidents/comments/',
+  controller.postCommentOnIncident,
+  (req, res) => res.status(200).json(res.locals.comment),
 );
 
 // posts data into a row in the public.incident table

@@ -14,8 +14,9 @@ const initialState = {
   time: null,
   image_url: null,
   video_url: null,
-  expandedPost: false
-  
+  expandedPost: false,
+  comments: [],
+  incident_id: null
 };
 
 const postsReducer = (state=initialState, action) => {
@@ -33,16 +34,32 @@ const postsReducer = (state=initialState, action) => {
       for (let incident of action.allIncidents){
         //console.log('test', incident.incident_id, action.payload)
         if (incident.incident_id === action.payload){
-          console.log('found incident', incident);
+          // console.log('found incident', incident);
           return {
             ...state,
-            ...incident
+            ...incident,
+            incident_id : action.payload
           };
         }
         
       }
       return {
         ...state,
+      };
+
+    case types.GET_COMMENTS:
+      const newComments = action.payload;
+      return {
+        ...state,
+        comments: [...newComments]
+      };
+
+    case types.POST_COMMENT:
+      const commentsAfterPosting = [...state.comments];
+      commentsAfterPosting.push(action.payload);
+      return {
+        ...state,
+        comments: [...commentsAfterPosting]
       };
       
 

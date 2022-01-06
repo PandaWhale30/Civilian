@@ -14,8 +14,6 @@ if (process.env.NODE_ENV === 'test') {
     connectionString: PG_URI,
   });
 
-
-
   /* 
 
   table public.incident:
@@ -41,6 +39,16 @@ if (process.env.NODE_ENV === 'test') {
     },
 
   */  
+  /* 
+    table public.comments:
+    {
+        "comment_id": 1 <-- PRIMARY KEY
+        "incident_id": 1 <-- FOREIGN KEY for public.incident.incident_id
+        "user_id": 1, <-- FOREIGN KEY for public.user.user_id
+        "comment": "bing bong",
+        "created on": "1/2/2022, 10:11:08 PM"
+    },
+  */ 
 
   module.exports = {
     query: (text, params, callback) => {

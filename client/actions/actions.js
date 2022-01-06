@@ -16,7 +16,6 @@ export const setExpandedPost = (visibility) => ({
 });
 
 export const getUsername = (name, password) => (dispatch) => {
-
   console.log('username password', name, password)
   console.log('in getusername axios req');
   axios.post('/api/incidents/user', {
@@ -24,7 +23,6 @@ export const getUsername = (name, password) => (dispatch) => {
       password: password
     })
     .then(({data}) => {
-      console.log('data', data);
       dispatch({
         type: types.GET_USERNAME,
         payload: data,
@@ -34,7 +32,6 @@ export const getUsername = (name, password) => (dispatch) => {
 };
 
 export const signUp = (username, password) => (dispatch) => {
-
   console.log('in signUpAndGetUsername axios req');
   axios.post(`/api/signup`, {
       name: username,
@@ -52,7 +49,6 @@ export const signUp = (username, password) => (dispatch) => {
 
 
 export const postEvent = (title, details, image_url, video_url) => (dispatch, getState) =>{
-
   console.log('in postEvent axios req');
   const lngLat = getState().user.lngLat;
   console.log('lnglat in postevent', lngLat);
@@ -73,14 +69,8 @@ export const postEvent = (title, details, image_url, video_url) => (dispatch, ge
       dispatch({
         type: types.POST_EVENT,
         payload: data
-        // payload: [data, {
-        //   "latitude": lat, 
-        //   "longitude": lng, 
-        //   "address": street_name, 
-        // },
       });
       console.log('got here')
-      //getCoordinates();
     })
     .catch(console.error);
   })
@@ -90,10 +80,8 @@ export const postEvent = (title, details, image_url, video_url) => (dispatch, ge
 
 
 export const changeActivePost = (incident_id) => (dispatch, getState) =>{
-  
   const allIncidents = getState().map.allIncidents;
   dispatch({ type: types.CHANGE_ACTIVE_POST, payload: incident_id, allIncidents: allIncidents });
-  
 };
 
 export const getCoordinates = () => (dispatch) => {
@@ -127,7 +115,7 @@ export const getCoordinates = () => (dispatch) => {
             }
           ))
         }
-        console.log('here', coordinates)
+        //console.log('here', coordinates)
         dispatch({type: types.GET_COORDINATES, payload: coordinates});
       }); 
     })
@@ -140,18 +128,49 @@ export const saveUserCoords = (lngLat) => ({
   payload: lngLat,
 });
 
-// //convert coordinates to address action 
-// export const getAddress = () => (dispatch) => {
-//   //convert coordinates to address 
-//   axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/-73.989,40.733.json?access_token=pk.eyJ1IjoiY2hsb2VsdTI5IiwiYSI6ImNreHZld3N0aTZ4czIydHFoeG1lbXptOGYifQ.vZ7brhHmInbKGS3AtbdMCQ`)
-//   .then(({data}) => {
-//     let address = data.features[0].place_name
-//   })
+export const getCommentsByIncident = (incident_id) => (dispatch) => {
 
-//   //send post request to database
-//   axios.post(`api/postevent`)
- 
-// }
+  console.log('in getCommentsByIncident axios req for incident id ', incident_id);
+  axios.get(`/api/incidents/comments/${incident_id}`)
+    .then(({data}) => {
+      console.log('data', data);
+      dispatch({
+        type: types.GET_COMMENTS,
+        payload: data,
+      });
+    })
+    .catch(console.error);
+};
+
+
+export const fillComment = (comment) => ({
+
+  type: types.FILL_COMMENT,
+  payload: comment,
+
+});
+
+export const postCommentOnIncident = (incident_id, user_id, comment, photo) => (dispatch) => {
+  console.log('in postCommentOnIncident axios req');
+  axios.post(`/api/incidents/comments`, {
+      incident_id: incident_id,
+      user_id: user_id,
+      comment: comment
+    })
+    .then(({data}) => {
+      console.log('data', data);
+      data.photo = photo;
+      dispatch({
+        type: types.POST_COMMENT,
+        payload: data,
+      });
+    })
+    .catch(console.error);
+  dispatch({
+    type: types.FILL_COMMENT,
+    payload: '',
+  });
+};
 
 
 
