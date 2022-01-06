@@ -54,8 +54,7 @@ const Map = (props) => {
 
   const handleGeocoderViewportChange = useCallback(
     (newViewport) => {
-      const geocoderDefaultOverrides = { transitionDuration: 4000 };
-
+      const geocoderDefaultOverrides = { transitionDuration: 4000, transitionInterpolator: new FlyToInterpolator() };
       return handleViewportChange({
         ...newViewport,
         ...geocoderDefaultOverrides
@@ -86,16 +85,18 @@ const Map = (props) => {
     >
     <GeolocateControl
       style={geolocateControlStyle}
-      positionOptions={{enableHighAccuracy: true}}
+      positionOptions={{enableHighAccuracy: true, transitionDuration: 2000}}
       trackUserLocation={true}
       showUserHeading={true}
-      auto
+      showAccuracyCircle={true}
+      onViewportChange={handleGeocoderViewportChange}
     />
     <Geocoder
       mapRef={mapRef}
       onViewportChange={handleGeocoderViewportChange}
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       position="top-left"
+      
     />
     {props.pinLocations.map((el, key) => {
       return (
@@ -110,7 +111,7 @@ const Map = (props) => {
               latitude: el.latitude,
               longitude: el.longitude,
               zoom: 15,
-              transitionDuration: 4000,
+              transitionDuration: 2500,
               transitionInterpolator: new FlyToInterpolator(),
             }
           )}
