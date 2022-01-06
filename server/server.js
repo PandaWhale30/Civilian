@@ -2,15 +2,29 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const pool = require('./database');
+const session = require('express-session')
+const passport = require('passport');
+
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const apiRouter = require('./api');
-
 // Handels parsing request body
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cors({
+      origin: '*',
+      methods: "GET, POST, PATCH, DELETE, PUT",
+      allowedHeaders: "Content-Type, Authorization",
+  
+  })
+  
+);
 
 // handle requests for static files
 app.use(express.static('./client'));
@@ -29,8 +43,33 @@ app.get('/', (req, res) => {
     });
 });
 
+//we need to implement express sessions for google oauth support 
+app.use(
+  session({
+    secret: 'blahblahblah',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 5000 },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 // defining route handlers
+
+//this is endpoint that routes oauth authentication 
+  //couldn't get it to work at the server.js level 
+
+// app.get('/auth/google', (req, res) => {
+//   console.log('server.js reached')
+//   res.status(200).send('auth/google deployed')
+// })
+
 app.use('/api', apiRouter);
+
+
 
 // global error handler
 app.use((err, req, res, next) => {

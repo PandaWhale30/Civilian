@@ -8,11 +8,11 @@ import Map from './components/Map';
 import './stylesheets/styles.css';
 import * as mapboxgl from 'mapbox-gl';
 
-console.log('in index.js')
+console.log('in index.js');
 
 render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );

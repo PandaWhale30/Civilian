@@ -2,12 +2,6 @@ import axios from 'axios';
 import * as types from '../constants/actionTypes';
 
 // have all the functions that trigger the reducers here
-
-export const setMap = (newViewport) => ({
-  type: types.SET_MAP,
-  payload: newViewport,
-})
-
 export const setExpandedPost = (visibility) => ({
 
   type: types.SET_EXPANDED_POST,
@@ -31,6 +25,24 @@ export const getUsername = (name, password) => (dispatch) => {
     .catch(console.error);
 };
 
+export const getGoogleOauth = () => (dispatch) => {
+  console.log('Oauth action triggered. action.js'); 
+
+  //we'll want to return name, photo 
+  fetch('/api/auth/google', {
+    method: 'GET',
+    })
+  .then(({data}) => {
+    console.log('dataoauth,', data.json());
+    dispatch({
+      type: types.GET_USERNAME, 
+      payload: data, 
+    })
+  })
+  .catch((console.error));
+
+}
+
 export const signUp = (username, password) => (dispatch) => {
   console.log('in signUpAndGetUsername axios req');
   axios.post(`/api/signup`, {
@@ -48,7 +60,7 @@ export const signUp = (username, password) => (dispatch) => {
 };
 
 
-export const postEvent = (title, details, image_url, video_url) => (dispatch, getState) =>{
+export const postEvent = (title, severity, details, image_url, video_url) => (dispatch, getState) =>{
   console.log('in postEvent axios req');
   const lngLat = getState().user.lngLat;
   console.log('lnglat in postevent', lngLat);
@@ -59,6 +71,7 @@ export const postEvent = (title, details, image_url, video_url) => (dispatch, ge
     let street_name = data.features[0].place_name
     axios.post(`/api/postevent`, {
       title: title,
+      severity: severity,
       street_name: street_name,
       video_url: video_url,
       image_url: image_url,
@@ -88,26 +101,23 @@ export const getCoordinates = () => (dispatch) => {
   console.log('in getCoordinates')
   axios.get(`api/incidents/`)
   .then(({data}) => {
-      // console.log('data', data);
       const addresses = [];
 
       for(let incident of data){
-        addresses.push({address: incident.street_name, id: incident.incident_id})
+        addresses.push({address: incident.street_name, id: incident.incident_id, severity: incident.severity})
       }
-      //convert queryString to the correct format
+
       const promises = [];
       const coordinates = [];
+
       for(let location of addresses){
         const query = location.address.replace(' ', '%20');
-        coordinates.push({id: location.id});
+        coordinates.push({id: location.id, severity: location.severity});
         promises.push(axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`))
       }
       Promise.all(promises)
       .then(responses => {
-        //console.log(responses)
-
         for (const index in responses){
-          //console.log('resp', index,coordinates[index])
           Object.assign(coordinates[index], (
             {"latitude": responses[index].data.features[0].center[1], 
             "longitude": responses[index].data.features[0].center[0], 
@@ -115,7 +125,6 @@ export const getCoordinates = () => (dispatch) => {
             }
           ))
         }
-        //console.log('here', coordinates)
         dispatch({type: types.GET_COORDINATES, payload: coordinates});
       }); 
     })
@@ -123,7 +132,6 @@ export const getCoordinates = () => (dispatch) => {
 }
 
 export const saveUserCoords = (lngLat) => ({
-  // console.log('in saveusercoords', lnglat);
   type: types.SAVE_USER_COORDS,
   payload: lngLat,
 });

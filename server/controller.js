@@ -187,7 +187,7 @@ controller.postEvent = async (req, res, next) => {
     const time = new Date(Date.now()).toLocaleString();
 
     // object destructuring the req.body to pass in to params
-    const { title, street_name, video_url, image_url, details } = req.body;
+    const { title, severity, street_name, video_url, image_url, details } = req.body;
     const params = [
       // params will be passed to db query, to insert the data object to the sql db
       title,
@@ -196,12 +196,13 @@ controller.postEvent = async (req, res, next) => {
       image_url,
       details,
       time,
+      severity
     ];
 
     // SQL command to insert values into the following table(public.incident) columns
     const text = `
-      INSERT INTO public.incident (title, street_name, video_url, image_url, details, time)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO public.incident (title, street_name, video_url, image_url, details, time, severity)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
       `;
 

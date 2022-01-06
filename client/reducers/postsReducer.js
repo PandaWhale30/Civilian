@@ -9,6 +9,7 @@ const initialState = {
   // video_url: 'https://www.youtube.com/embed/sqAwvpw_FKc',
   // expandedPost: false,
   title: null,
+  severity: null,
   street_name: null,
   details: null,
   time: null,
@@ -29,19 +30,14 @@ const postsReducer = (state=initialState, action) => {
       };
 
     case types.CHANGE_ACTIVE_POST:
-      //console.log("incident", action.allIncidents)
-      // console.log('actionPayload', action.payload)
       for (let incident of action.allIncidents){
-        //console.log('test', incident.incident_id, action.payload)
         if (incident.incident_id === action.payload){
-          // console.log('found incident', incident);
           return {
             ...state,
             ...incident,
             incident_id : action.payload
           };
         }
-        
       }
       return {
         ...state,
@@ -62,7 +58,6 @@ const postsReducer = (state=initialState, action) => {
         comments: [...commentsAfterPosting]
       };
       
-
     default:
       return state;
   }
