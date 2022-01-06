@@ -33,6 +33,24 @@ export const getUsername = (name, password) => (dispatch) => {
     .catch(console.error);
 };
 
+export const getGoogleOauth = () => (dispatch) => {
+  console.log('Oauth action triggered. action.js'); 
+
+  //we'll want to return name, photo 
+  fetch('/api/auth/google', {
+    method: 'GET',
+    })
+  .then(({data}) => {
+    console.log('dataoauth,', data.json());
+    dispatch({
+      type: types.GET_USERNAME, 
+      payload: data, 
+    })
+  })
+  .catch((console.error));
+
+}
+
 export const signUp = (username, password) => (dispatch) => {
 
   console.log('in signUpAndGetUsername axios req');

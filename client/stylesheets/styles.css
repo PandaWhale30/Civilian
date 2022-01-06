@@ -371,6 +371,12 @@ label {
 #login-button:hover{
   background-color: #603aeb;
 }
+#login-button-google{
+  background-color: #d84339;
+}
+#login-button-google:hover{
+  background-color: #603aeb;
+}
 
 .form-button {
   font-size: 0.85rem;

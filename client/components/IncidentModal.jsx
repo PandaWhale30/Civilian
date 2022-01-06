@@ -62,6 +62,10 @@ const IncidentModal = (props) => {
           <input className="form-input" type="text" name="address" placeholder="Enter the location"/>
         </div> */}
         <div className="input-div">
+          <label htmlFor="severity">DANGER</label>
+          <input className="form-input" type="text" name="title" placeholder="Title of Incident"/>
+        </div>
+        <div className="input-div">
           <label htmlFor="details">DETAILS</label>
           <input className="form-input" type="text" name="details" placeholder="Enter any details"/>
         </div>

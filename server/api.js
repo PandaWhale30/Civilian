@@ -3,6 +3,14 @@ const express = require('express');
 const controller = require('./controller');
 
 const router = express.Router();
+const cors = require('cors');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oidc')
+
+//this where is the problem is 
+const passportObj = require('./passport.setup.js');
+
+passportObj.passportSetup();
 
 // gets all rows from public.user table
 router.get(
@@ -18,7 +26,7 @@ router.get(
   (req, res) => res.status(200).json(res.locals.incidentInfo),
 );
 
-// gets name, photo from pulblic.user, passing username &  decrypting password in req.body
+// gets name, photo from pulblic.user, passing username & decrypting password in req.body
 router.post(
   '/incidents/user',
   controller.getUserName,
@@ -78,6 +86,34 @@ router.put(
   '/incidents/update-details:id',
   controller.updateIncidentDetails,
   (req, res) => res.status(200).json('details was updated!'),
+);
+
+//this is endpoint that routes oauth authentication 
+router.get(
+  '/auth/google', cors({
+    origin: '*',
+    methods: "GET, POST, PATCH, DELETE, PUT",
+    allowedHeaders: "Content-Type, Authorization",
+
+}), passport.authenticate('google', { scope: ['openid', 'profile', 'email'] }),
+  (req,res) => {
+    console.log('passed passport.authenticate')
+    res.status(200).send('recieved response from google')}
+);
+
+router.get(
+  '/auth/google/callback', () => {console.log("entered callback route")}, passport.authenticate('google'), 
+  (req, res) => {
+    res.status(200).send('logged in')
+    //this is when to send to frontend 
+    //store the user data into the passport session data
+    // to do// --> change this to fit what we're passing into redux in frontend 
+    req.session.userID = req.session.passport.user;
+    console.log(req.session.passport.user);
+
+    //redirect to home page? // --> how would we redirect while simultaneously maintining state 
+    res.status(200).redirect('/');
+  }
 );
 
 module.exports = router;

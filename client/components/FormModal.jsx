@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { getUsername, signUp } from '../actions/actions';
+import { getUsername, signUp, getGoogleOauth } from '../actions/actions';
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IconContext } from 'react-icons';
 import logo from '../../assets/danger-pin.png'
@@ -17,7 +17,14 @@ const mapDispatchToProps = dispatch => ({
     console.log(e.target.form[0].value, e.target.form[1].value);
     dispatch(signUp(e.target.form[0].value, e.target.form[1].value));
   },
+  loginGoogleOauth: (e) =>{
+    e.preventDefault();
+    //not passing in anything in dispatch bc Oauth 
+    console.log('Button fired off!')
+    dispatch(getGoogleOauth());
+  }
 });
+
 
 const FormModal = (props) => {
   return (
@@ -40,6 +47,9 @@ const FormModal = (props) => {
         <div id='button-container'>
           <button id="signup-button" className="form-button" onClick={(e) => {props.signup(e);props.onCloseButtonClick();}}>Sign Up</button>
           <button id="login-button" className="form-button" onClick={(e) => {props.login(e);props.onCloseButtonClick();}}>Login</button>
+          <a href="/api/auth/google"  id="login-button-google" className="form-button" >HREF Login with Google</a>
+          <button id="login-button-google" className="form-button" onClick={(e) => {props.loginGoogleOauth(e);props.onCloseButtonClick();}}>Login with Google</button>
+
         </div>
       </form>
     </div>
