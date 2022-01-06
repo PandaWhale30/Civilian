@@ -2,12 +2,6 @@ import axios from 'axios';
 import * as types from '../constants/actionTypes';
 
 // have all the functions that trigger the reducers here
-
-export const setMap = (newViewport) => ({
-  type: types.SET_MAP,
-  payload: newViewport,
-});
-
 export const setExpandedPost = (visibility) => ({
 
   type: types.SET_EXPANDED_POST,
@@ -107,15 +101,15 @@ export const getCoordinates = () => (dispatch) => {
   console.log('in getCoordinates')
   axios.get(`api/incidents/`)
   .then(({data}) => {
-      // console.log('data', data);
       const addresses = [];
 
       for(let incident of data){
         addresses.push({address: incident.street_name, id: incident.incident_id, severity: incident.severity})
       }
-      //convert queryString to the correct format
+
       const promises = [];
       const coordinates = [];
+
       for(let location of addresses){
         const query = location.address.replace(' ', '%20');
         coordinates.push({id: location.id, severity: location.severity});
@@ -123,10 +117,7 @@ export const getCoordinates = () => (dispatch) => {
       }
       Promise.all(promises)
       .then(responses => {
-        //console.log(responses)
-
         for (const index in responses){
-          //console.log('resp', index,coordinates[index])
           Object.assign(coordinates[index], (
             {"latitude": responses[index].data.features[0].center[1], 
             "longitude": responses[index].data.features[0].center[0], 
@@ -134,7 +125,6 @@ export const getCoordinates = () => (dispatch) => {
             }
           ))
         }
-        //console.log('here', coordinates)
         dispatch({type: types.GET_COORDINATES, payload: coordinates});
       }); 
     })
@@ -142,7 +132,6 @@ export const getCoordinates = () => (dispatch) => {
 }
 
 export const saveUserCoords = (lngLat) => ({
-  // console.log('in saveusercoords', lnglat);
   type: types.SAVE_USER_COORDS,
   payload: lngLat,
 });

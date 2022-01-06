@@ -61,10 +61,10 @@ const ExpandedPost = (props) => {
           {comments}
         </div>
         {props.isLoggedIn && 
-          <form className = 'post-comment-container'>
+          <form className = 'post-comment-container' onSubmit={(e) => {e.preventDefault();}}>
             <input className='comment-input' type='text' placeholder='Leave a comment' value={props.userComment} onChange={(e) => props.fillComment(e.target.value)}/>
             <IconContext.Provider value={{className: 'post-comment-button', size:'1.5rem'}}>
-              <BsFillArrowUpCircleFill onClick={() => props.postCommentOnIncident(props.incident_id, props.userID, props.userComment, props.photo)}/>
+              <BsFillArrowUpCircleFill onClick={(e) => {e.preventDefault();props.postCommentOnIncident(props.incident_id, props.userID, props.userComment, props.photo)}}/>
             </IconContext.Provider>
           </form>
         }

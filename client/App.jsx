@@ -34,29 +34,14 @@ const App = (props) => {
 
   return (
     <div id='app'>
-      {!props.isLoggedIn && (
-        <IconContext.Provider
-          value={{ className: 'login-button', size: '2em' }}
-        >
-          <BsPersonCircle
-            onClick={() => {
-              setShowFormModal(true);
-            }}
-          />
-        </IconContext.Provider>
-      )}
-      {props.isLoggedIn && (
-        <div id='user-container'>
-          <img id='user-image' src={props.photo} />{' '}
-          <span id='welcome-text'>
-            Hello <b>{props.username.toUpperCase()}</b>
-          </span>
-        </div>
-      )}
-      <div id='logo-wrapper'>
-        <span id='civ'>DANGER</span>
-        <img id='logo' src={logo} />
-        <span id='lian'>APP</span>
+      {!props.isLoggedIn && <IconContext.Provider value={{className: 'login-button', size:'2em'}}>
+        <BsPersonCircle onClick={() => {setShowFormModal(true)}}/>
+      </IconContext.Provider>}
+      {props.isLoggedIn && <div id="user-container"><img id='user-image' src={props.photo}/> <span id="welcome-text">Hello <b>{props.username.toUpperCase()}</b></span></div>}
+      <div id="logo-wrapper">
+        <span id="civ">DAN</span>
+        <img id="logo" src={logo}/>
+        <span id="lian">GER</span>
       </div>
       <div id='main-content'>
         <div id='map'>

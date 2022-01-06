@@ -36,13 +36,9 @@ const userReducer = (state=initialState, action) => {
         userComment : action.payload
       };
 
-  
-
     default:
       return state;
   }
-
-  
 }
 
 
